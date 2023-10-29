@@ -77,7 +77,9 @@ print(classification_report(y_test, y_pred))
 # Khởi tạo webcam
 cap = cv2.VideoCapture(0)
 
-while cap.isOpened():
+is_window_closed = False
+
+while cap.isOpened() and not is_window_closed:
     ret, frame = cap.read()
     if not ret:
         break
@@ -118,8 +120,14 @@ while cap.isOpened():
 
     cv2.imshow("Hand Gesture Recognition", frame)
 
-    if cv2.waitKey(10) & 0xFF == ord("q"):
+    key = cv2.waitKey(1)
+    if (
+        key == ord("x") or key == ord("X") or key == 27
+    ):  # Kiểm tra khi người dùng nhấn X hoặc phím Escape (ESC)
         break
+
+    if cv2.getWindowProperty("Hand Gesture Recognition", cv2.WND_PROP_VISIBLE) < 1:
+        is_window_closed = True
 
 # Tính toán và in ra độ chính xác của từng loại cử chỉ trên tập kiểm tra
 y_pred_test = model.predict(X_test)
